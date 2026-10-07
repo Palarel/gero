@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090a0f">
+  <meta name="description" content="Медиаархив в Telegram: удобный каталог, оплата Telegram Stars и моментальная выдача файлов.">
+  <title>GREO — медиаархив в Telegram</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #090a0f;
+      --panel: rgba(255, 255, 255, .045);
+      --line: rgba(255, 255, 255, .09);
+      --muted: #9899a8;
+      --text: #f5f4fb;
+      --violet: #a78bfa;
+      --cyan: #67e8f9;
+      --green: #65e5a2;
+      --font: "DM Sans", sans-serif;
+      --display: "Manrope", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        radial-gradient(ellipse at 76% 13%, rgba(94, 65, 177, .16), transparent 35rem),
+        radial-gradient(ellipse at 8% 54%, rgba(39, 122, 147, .08), transparent 30rem),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .shell { width: min(1120px, calc(100% - 40px)); margin-inline: auto; }
+    .topbar {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,.055);
+    }
+    .brand { display: inline-flex; align-items: center; gap: 11px; font: 800 18px var(--display); letter-spacing: -.06em; }
+    .brand-mark {
+      display: grid; width: 34px; height: 34px; place-items: center;
+      border: 1px solid rgba(167,139,250,.38); border-radius: 11px;
+      background: linear-gradient(145deg, rgba(167,139,250,.22), rgba(103,232,249,.08));
+      color: #c9b8ff; font-size: 17px; box-shadow: 0 0 24px rgba(167,139,250,.12);
+    }
+    .live {
+      display: inline-flex; align-items: center; gap: 9px; padding: 9px 13px;
+      border: 1px solid rgba(101,229,162,.18); border-radius: 999px;
+      background: rgba(101,229,162,.055); color: #baf4d4; font-size: 12px; font-weight: 600;
+    }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 12px var(--green); animation: pulse 1.8s ease-in-out infinite; }
+    .hero {
+      min-height: 605px; padding: 70px 0 66px; display: grid;
+      grid-template-columns: 1.02fr .98fr; align-items: center; gap: 50px;
+    }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 9px; margin-bottom: 20px;
+      color: #c7b4ff; font-size: 11px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 21px; height: 1px; background: var(--violet); box-shadow: 0 0 9px var(--violet); }
+    h1 { max-width: 570px; margin: 0; font: 800 clamp(42px, 6vw, 68px)/1.06 var(--display); letter-spacing: -.065em; }
+    .gradient-text { background: linear-gradient(105deg, #c5b3ff 3%, #8fdcf3 90%); color: transparent; background-clip: text; -webkit-background-clip: text; }
+    .hero-copy { max-width: 490px; margin: 22px 0 28px; color: var(--muted); font-size: 16px; line-height: 1.8; }
+    .actions { display: flex; align-items: center; gap: 17px; flex-wrap: wrap; }
+    .cta {
+      position: relative; isolation: isolate; display: inline-flex; min-height: 56px;
+      align-items: center; justify-content: center; gap: 12px; padding: 0 23px;
+      overflow: hidden; border: 1px solid rgba(208,193,255,.4); border-radius: 15px;
+      background: linear-gradient(110deg, #8264e8, #6587e8 58%, #54a9d4);
+      color: white; font-size: 14px; font-weight: 700; box-shadow: 0 9px 32px rgba(111,92,219,.27);
+      transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+    }
+    .cta::before { content: ""; position: absolute; z-index: -1; inset: 0; background: linear-gradient(110deg, transparent 15%, rgba(255,255,255,.22) 48%, transparent 76%); transform: translateX(-110%); transition: transform .55s ease; }
+    .cta:hover { transform: translateY(-3px); filter: saturate(1.12); box-shadow: 0 13px 42px rgba(111,92,219,.42); }
+    .cta:hover::before { transform: translateX(110%); }
+    .cta:active { transform: translateY(0) scale(.98); }
+    .cta:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; }
+    .cta svg { width: 18px; height: 18px; }
+    .microcopy { color: #858697; font-size: 12px; }
+    .visual-wrap { position: relative; min-width: 0; }
+    .visual-glow { position: absolute; inset: 12% 8%; border-radius: 50%; background: rgba(121,98,218,.3); filter: blur(75px); pointer-events: none; }
+    .visual {
+      position: relative; min-height: 360px; aspect-ratio: 1.12;
+      overflow: hidden; border: 1px solid rgba(255,255,255,.13); border-radius: 26px;
+      background: radial-gradient(ellipse at 62% 38%, rgba(114,94,194,.45), transparent 36%),
+        radial-gradient(ellipse at 30% 80%, rgba(35,146,164,.32), transparent 42%),
+        linear-gradient(145deg, #191a2a, #10121b 65%, #121c24);
+      box-shadow: 0 30px 80px rgba(0,0,0,.42), inset 0 1px rgba(255,255,255,.09);
+    }
+    .visual::before, .visual::after { content: ""; position: absolute; border: 1px solid rgba(206,202,255,.17); border-radius: 50%; transform: rotate(-28deg); }
+    .visual::before { width: 74%; height: 130%; top: -17%; left: 12%; }
+    .visual::after { width: 51%; height: 112%; top: -5%; left: 25%; border-color: rgba(111,227,240,.13); }
+    .visual-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .93; mix-blend-mode: screen; }
+    .visual-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .visual.has-image .visual-art { display: none; }
+    .visual-caption {
+      position: absolute; z-index: 2; right: 18px; bottom: 18px; left: 18px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 13px 15px; border: 1px solid rgba(255,255,255,.13); border-radius: 14px;
+      background: rgba(12,13,20,.52); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    }
+    .caption-title { font-size: 12px; font-weight: 600; }
+    .caption-sub { display: block; margin-top: 3px; color: #a5a5b3; font-size: 10px; }
+    .caption-chip { padding: 6px 9px; border: 1px solid rgba(103,232,249,.18); border-radius: 8px; color: #a8edf4; font-size: 10px; white-space: nowrap; }
+    .float-tag {
+      position: absolute; z-index: 3; top: 15%; right: -18px; padding: 11px 14px;
+      border: 1px solid rgba(255,255,255,.13); border-radius: 13px; background: rgba(24,25,37,.72);
+      box-shadow: 0 12px 30px rgba(0,0,0,.22); backdrop-filter: blur(14px); color: #dfdded; font-size: 11px;
+      animation: drift 4s ease-in-out infinite;
+    }
+    .float-tag span { color: var(--green); }
+    .stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); margin: 0 0 90px;
+      border: 1px solid var(--line); border-radius: 19px; background: linear-gradient(110deg, rgba(255,255,255,.035), rgba(255,255,255,.018));
+      backdrop-filter: blur(12px);
+    }
+    .stat { padding: 25px 30px; }
+    .stat + .stat { border-left: 1px solid var(--line); }
+    .stat-value { font: 700 clamp(22px, 3vw, 30px) var(--display); letter-spacing: -.05em; }
+    .stat-label { margin-top: 6px; color: var(--muted); font-size: 12px; }
+    .section-head { max-width: 510px; margin: 0 auto 32px; text-align: center; }
+    .section-head .eyebrow { justify-content: center; }
+    h2 { margin: 0; font: 700 clamp(27px, 4vw, 38px)/1.2 var(--display); letter-spacing: -.05em; }
+    .section-copy { margin: 12px 0 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 86px; }
+    .feature {
+      min-height: 190px; padding: 23px; border: 1px solid var(--line); border-radius: 17px;
+      background: linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,255,255,.018));
+      transition: transform .25s ease, border-color .25s ease, background .25s ease;
+    }
+    .feature:hover { transform: translateY(-5px); border-color: rgba(167,139,250,.3); background: linear-gradient(145deg, rgba(167,139,250,.08), rgba(255,255,255,.02)); }
+    .feature-icon { display: grid; width: 42px; height: 42px; place-items: center; margin-bottom: 21px; border: 1px solid rgba(167,139,250,.2); border-radius: 13px; background: rgba(167,139,250,.08); color: #c4b2ff; }
+    .feature-icon svg { width: 20px; height: 20px; }
+    .feature h3 { margin: 0 0 8px; font: 700 15px var(--display); }
+    .feature p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .bottom-cta {
+      display: flex; align-items: center; justify-content: space-between; gap: 25px; margin-bottom: 68px;
+      padding: 27px 30px; border: 1px solid rgba(167,139,250,.16); border-radius: 18px;
+      background: radial-gradient(ellipse at 85% 0%, rgba(112,90,201,.16), transparent 55%), rgba(255,255,255,.025);
+    }
+    .bottom-cta h2 { font-size: 22px; }
+    .bottom-cta p { margin: 7px 0 0; color: var(--muted); font-size: 12px; }
+    .bottom-cta .cta { min-height: 48px; padding-inline: 19px; white-space: nowrap; }
+    footer { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 22px 0 27px; border-top: 1px solid rgba(255,255,255,.065); color: #858697; font-size: 11px; }
+    .footer-link { color: #c6b7ff; transition: color .2s ease; }
+    .footer-link:hover { color: var(--cyan); }
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .65s ease, transform .65s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    @keyframes pulse { 50% { opacity: .48; box-shadow: 0 0 4px var(--green); } }
+    @keyframes drift { 50% { transform: translateY(-8px); } }
+    @media (max-width: 760px) {
+      .shell { width: min(100% - 36px, 540px); }
+      .topbar { min-height: 68px; }
+      .hero { min-height: auto; padding: 54px 0 43px; grid-template-columns: 1fr; gap: 36px; }
+      h1 { max-width: 540px; font-size: clamp(42px, 11vw, 59px); }
+      .hero-copy { margin: 17px 0 23px; font-size: 14px; }
+      .visual { min-height: 285px; aspect-ratio: 1.15; }
+      .float-tag { right: -7px; top: 12%; }
+      .stats { margin-bottom: 66px; }
+      .stat { padding: 18px 12px; text-align: center; }
+      .stat-label { font-size: 10px; line-height: 1.5; }
+      .features { grid-template-columns: 1fr; gap: 10px; margin-bottom: 60px; }
+      .feature { display: grid; min-height: auto; grid-template-columns: 42px 1fr; column-gap: 14px; padding: 17px; }
+      .feature-icon { grid-row: span 2; margin: 0; }
+      .feature h3 { align-self: end; margin: 0 0 5px; }
+      .feature p { align-self: start; }
+      .bottom-cta { align-items: flex-start; flex-direction: column; margin-bottom: 48px; padding: 22px; }
+      footer { align-items: flex-start; flex-direction: column; gap: 9px; }
+    }
+    @media (max-width: 390px) {
+      .shell { width: calc(100% - 28px); }
+      .live { padding: 8px 10px; font-size: 11px; }
+      .actions { align-items: stretch; flex-direction: column; }
+      .cta { width: 100%; }
+      .microcopy { text-align: center; }
+      .stat { padding-inline: 7px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="shell topbar">
+    <a class="brand" href="#" aria-label="GREO — на главную">
+      <span class="brand-mark" aria-hidden="true">G</span>
+      <span>GREO</span>
+    </a>
+    <div class="live"><span class="live-dot" aria-hidden="true"></span>Бот онлайн</div>
+  </header>
+
+  <main>
+    <section class="shell hero">
+      <div class="hero-content reveal">
+        <div class="eyebrow">Твой доступ начинается здесь</div>
+        <h1>Эксклюзивный<br><span class="gradient-text">медиаархив</span></h1>
+        <p class="hero-copy">Фото и видео в удобном Telegram-каталоге. Выбирай то, что интересно, и получай материалы прямо в чат — быстро и без лишних шагов.</p>
+        <div class="actions">
+          <a class="cta" href="https://t.me/georic_bot" target="_blank" rel="noopener noreferrer">
+            Перейти в бота
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <span class="microcopy">Откроется в Telegram · доступ 24/7</span>
+        </div>
+      </div>
+
+      <div class="visual-wrap reveal">
+        <div class="visual-glow" aria-hidden="true"></div>
+        <div class="float-tag"><span>✦</span> Новые материалы</div>
+        <div class="visual" id="hero-visual">
+          <svg class="visual-art" viewBox="0 0 640 560" fill="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="orb" x1="155" y1="78" x2="456" y2="460" gradientUnits="userSpaceOnUse"><stop stop-color="#C9B5FF"/><stop offset=".48" stop-color="#7D91E9"/><stop offset="1" stop-color="#68DCE8"/></linearGradient>
+              <radialGradient id="shine" cx="0" cy="0" r="1" gradientTransform="matrix(87 166 -191 100 265 190)" gradientUnits="userSpaceOnUse"><stop stop-color="white" stop-opacity=".67"/><stop offset="1" stop-color="white" stop-opacity="0"/></radialGradient>
+            </defs>
+            <circle cx="323" cy="272" r="165" fill="url(#orb)" fill-opacity=".78"/>
+            <circle cx="323" cy="272" r="165" fill="url(#shine)"/>
+            <ellipse cx="323" cy="272" rx="230" ry="92" stroke="#C7D3FF" stroke-opacity=".38" transform="rotate(-28 323 272)"/>
+            <ellipse cx="323" cy="272" rx="191" ry="236" stroke="#8FE7EF" stroke-opacity=".2" transform="rotate(31 323 272)"/>
+            <circle cx="478" cy="161" r="5" fill="#B8F7F4"/><circle cx="165" cy="380" r="3" fill="#D0C1FF"/>
+            <path d="M109 144h73M145 108v72M478 385h50m-25-25v50" stroke="white" stroke-opacity=".24" stroke-linecap="round"/>
+          </svg>
+          <img class="visual-img" src="assets/hero.jpg" alt="Абстрактная обложка медиаархива" onerror="this.remove()">
+          <div class="visual-caption">
+            <div><span class="caption-title">Закрытый каталог</span><span class="caption-sub">Обновления каждый день</span></div>
+            <span class="caption-chip">PHOTO · VIDEO</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="shell stats reveal" aria-label="Статистика архива">
+      <div class="stat"><div class="stat-value">500<span class="gradient-text">+</span></div><div class="stat-label">доступных файлов</div></div>
+      <div class="stat"><div class="stat-value">2,400<span class="gradient-text">+</span></div><div class="stat-label">активных пользователей</div></div>
+      <div class="stat"><div class="stat-value">&lt; 1 <span class="gradient-text">сек</span></div><div class="stat-label">до получения файла</div></div>
+    </section>
+
+    <section class="shell" id="how-it-works">
+      <div class="section-head reveal">
+        <div class="eyebrow">Всё просто</div>
+        <h2>От выбора до просмотра —<br><span class="gradient-text">пара мгновений</span></h2>
+        <p class="section-copy">Весь процесс проходит внутри Telegram. Без регистрации на сторонних сайтах.</p>
+      </div>
+      <div class="features">
+        <article class="feature reveal">
+          <div class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="3.5" y="4" width="17" height="16" rx="3" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="10" r="1.7" stroke="currentColor" stroke-width="1.5"/><path d="m5 17 4.5-4 3.2 2.6 2.5-2.1L19 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h3>Выбирай медиа</h3><p>Удобный каталог фото и видео — найди интересное за пару касаний.</p>
+        </article>
+        <article class="feature reveal">
+          <div class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="m12 2 2.6 6.1L21 11l-6.4 2.9L12 20l-2.6-6.1L3 11l6.4-2.9L12 2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m19 16 .9 2.1L22 19l-2.1.9L19 22l-.9-2.1L16 19l2.1-.9L19 16Z" fill="currentColor"/></svg></div>
+          <h3>Оплачивай Stars</h3><p>Быстрая оплата Telegram Stars прямо в мессенджере — просто и удобно.</p>
+        </article>
+        <article class="feature reveal">
+          <div class="feature-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5 9.2 17 20 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/></svg></div>
+          <h3>Получай сразу</h3><p>Выбранные файлы приходят без задержек — прямо в чат с ботом.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="shell bottom-cta reveal">
+      <div><h2>Готов заглянуть в архив?</h2><p>Открой бота и выбери материалы для себя.</p></div>
+      <a class="cta" href="https://t.me/georic_bot" target="_blank" rel="noopener noreferrer">
+        Открыть в Telegram
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </section>
+  </main>
+
+  <footer class="shell">
+    <span>© <span id="year"></span> GREO. Все права защищены.</span>
+    <span>Вопросы? <a class="footer-link" href="https://t.me/georic_bot" target="_blank" rel="noopener noreferrer">@georic_bot</a></span>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    const revealItems = document.querySelectorAll(".reveal");
+    if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const observer = new IntersectionObserver((entries, currentObserver) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            currentObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      revealItems.forEach((item) => observer.observe(item));
+    } else {
+      revealItems.forEach((item) => item.classList.add("visible"));
+    }
+    const heroImage = document.querySelector(".visual-img");
+    if (heroImage) {
+      heroImage.addEventListener("load", () => document.getElementById("hero-visual").classList.add("has-image"));
+      if (heroImage.complete && heroImage.naturalWidth > 0) {
+        document.getElementById("hero-visual").classList.add("has-image");
+      }
+    }
+  </script>
+</body>
+</html>
