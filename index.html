@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#090a0f">
   <meta name="description" content="Медиаархив в Telegram: удобный каталог, оплата Telegram Stars и моментальная выдача файлов.">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'sha256-c2G3YPBHLJPKlr8KTllORYcw7s8mbkm/9G76uyiFcz8='; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src 'none'; upgrade-insecure-requests">
   <title>GREO — медиаархив в Telegram</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -232,7 +234,7 @@
             <circle cx="478" cy="161" r="5" fill="#B8F7F4"/><circle cx="165" cy="380" r="3" fill="#D0C1FF"/>
             <path d="M109 144h73M145 108v72M478 385h50m-25-25v50" stroke="white" stroke-opacity=".24" stroke-linecap="round"/>
           </svg>
-          <img class="visual-img" src="assets/hero.jpg" alt="Абстрактная обложка медиаархива" onerror="this.remove()">
+          <img class="visual-img" src="assets/hero.jpg" alt="Абстрактная обложка медиаархива">
           <div class="visual-caption">
             <div><span class="caption-title">Закрытый каталог</span><span class="caption-sub">Обновления каждый день</span></div>
             <span class="caption-chip">PHOTO · VIDEO</span>
@@ -283,6 +285,7 @@
     <span>Вопросы? <a class="footer-link" href="https://t.me/georic_bot" target="_blank" rel="noopener noreferrer">@georic_bot</a></span>
   </footer>
 
+  <!-- Keep the Content-Security-Policy script hash in sync when editing this block. -->
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
     const revealItems = document.querySelectorAll(".reveal");
@@ -301,9 +304,14 @@
     }
     const heroImage = document.querySelector(".visual-img");
     if (heroImage) {
-      heroImage.addEventListener("load", () => document.getElementById("hero-visual").classList.add("has-image"));
-      if (heroImage.complete && heroImage.naturalWidth > 0) {
-        document.getElementById("hero-visual").classList.add("has-image");
+      heroImage.addEventListener("load", () => document.getElementById("hero-visual").classList.add("has-image"), { once: true });
+      heroImage.addEventListener("error", () => heroImage.remove(), { once: true });
+      if (heroImage.complete) {
+        if (heroImage.naturalWidth > 0) {
+          document.getElementById("hero-visual").classList.add("has-image");
+        } else {
+          heroImage.remove();
+        }
       }
     }
   </script>
