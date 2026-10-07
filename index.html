@@ -10,11 +10,11 @@
   <title>GREO — медиаархив в Telegram</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: dark;
-      --bg: #090a0f;
+      --bg: #0b0d13;
       --panel: rgba(255, 255, 255, .045);
       --line: rgba(255, 255, 255, .09);
       --muted: #9899a8;
@@ -22,8 +22,8 @@
       --violet: #a78bfa;
       --cyan: #67e8f9;
       --green: #65e5a2;
-      --font: "DM Sans", sans-serif;
-      --display: "Manrope", sans-serif;
+      --font: "Inter", sans-serif;
+      --display: "Inter", sans-serif;
     }
 
     * { box-sizing: border-box; }
@@ -84,7 +84,7 @@
       transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
     }
     .cta::before { content: ""; position: absolute; z-index: -1; inset: 0; background: linear-gradient(110deg, transparent 15%, rgba(255,255,255,.22) 48%, transparent 76%); transform: translateX(-110%); transition: transform .55s ease; }
-    .cta:hover { transform: translateY(-3px); filter: saturate(1.12); box-shadow: 0 13px 42px rgba(111,92,219,.42); }
+    .cta:hover { transform: scale(1.03); filter: saturate(1.12); box-shadow: 0 13px 42px rgba(111,92,219,.48); }
     .cta:hover::before { transform: translateX(110%); }
     .cta:active { transform: translateY(0) scale(.98); }
     .cta:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 4px; }
@@ -93,19 +93,23 @@
     .visual-wrap { position: relative; min-width: 0; }
     .visual-glow { position: absolute; inset: 12% 8%; border-radius: 50%; background: rgba(121,98,218,.3); filter: blur(75px); pointer-events: none; }
     .visual {
-      position: relative; min-height: 360px; aspect-ratio: 1.12;
-      overflow: hidden; border: 1px solid rgba(255,255,255,.13); border-radius: 26px;
-      background: radial-gradient(ellipse at 62% 38%, rgba(114,94,194,.45), transparent 36%),
-        radial-gradient(ellipse at 30% 80%, rgba(35,146,164,.32), transparent 42%),
-        linear-gradient(145deg, #191a2a, #10121b 65%, #121c24);
+      position: relative; isolation: isolate; min-height: 280px; aspect-ratio: 1.12;
+      overflow: hidden; border: 1px solid rgba(255,255,255,.12); border-radius: 26px;
+      background: radial-gradient(ellipse at 72% 12%, rgba(93,77,166,.2), transparent 45%),
+        linear-gradient(145deg, #171923, #10121a 65%, #101b21);
       box-shadow: 0 30px 80px rgba(0,0,0,.42), inset 0 1px rgba(255,255,255,.09);
     }
-    .visual::before, .visual::after { content: ""; position: absolute; border: 1px solid rgba(206,202,255,.17); border-radius: 50%; transform: rotate(-28deg); }
-    .visual::before { width: 74%; height: 130%; top: -17%; left: 12%; }
-    .visual::after { width: 51%; height: 112%; top: -5%; left: 25%; border-color: rgba(111,227,240,.13); }
-    .visual-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .93; mix-blend-mode: screen; }
-    .visual-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .visual.has-image .visual-art { display: none; }
+    .visual::before {
+      position: absolute; z-index: 1; inset: 0; border: 1px solid transparent;
+      border-radius: inherit; background: linear-gradient(145deg, rgba(255,255,255,.08), transparent 42%, rgba(103,232,249,.08)) border-box;
+      box-shadow: inset 0 0 46px rgba(107,88,196,.2); content: ""; pointer-events: none;
+    }
+    .visual::after {
+      position: absolute; z-index: 1; inset: 0;
+      background: linear-gradient(180deg, rgba(9,10,16,.1), transparent 45%, rgba(9,10,16,.18));
+      content: ""; pointer-events: none;
+    }
+    .visual-img { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: inherit; object-fit: cover; }
     .visual-caption {
       position: absolute; z-index: 2; right: 18px; bottom: 18px; left: 18px;
       display: flex; align-items: center; justify-content: space-between; gap: 12px;
@@ -117,15 +121,16 @@
     .caption-chip { padding: 6px 9px; border: 1px solid rgba(103,232,249,.18); border-radius: 8px; color: #a8edf4; font-size: 10px; white-space: nowrap; }
     .float-tag {
       position: absolute; z-index: 3; top: 15%; right: -18px; padding: 11px 14px;
+      display: inline-flex; align-items: center; gap: 8px;
       border: 1px solid rgba(255,255,255,.13); border-radius: 13px; background: rgba(24,25,37,.72);
       box-shadow: 0 12px 30px rgba(0,0,0,.22); backdrop-filter: blur(14px); color: #dfdded; font-size: 11px;
       animation: drift 4s ease-in-out infinite;
     }
-    .float-tag span { color: var(--green); }
+    .float-tag span { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
     .stats {
       display: grid; grid-template-columns: repeat(3, 1fr); margin: 0 0 90px;
-      border: 1px solid var(--line); border-radius: 19px; background: linear-gradient(110deg, rgba(255,255,255,.035), rgba(255,255,255,.018));
-      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,.08); border-radius: 19px; background: linear-gradient(110deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     }
     .stat { padding: 25px 30px; }
     .stat + .stat { border-left: 1px solid var(--line); }
@@ -161,7 +166,7 @@
     .reveal.visible { opacity: 1; transform: translateY(0); }
     @keyframes pulse { 50% { opacity: .48; box-shadow: 0 0 4px var(--green); } }
     @keyframes drift { 50% { transform: translateY(-8px); } }
-    @media (max-width: 760px) {
+    @media (max-width: 767px) {
       .shell { width: min(100% - 36px, 540px); }
       .topbar { min-height: 68px; }
       .hero { min-height: auto; padding: 54px 0 43px; grid-template-columns: 1fr; gap: 36px; }
@@ -220,21 +225,9 @@
 
       <div class="visual-wrap reveal">
         <div class="visual-glow" aria-hidden="true"></div>
-        <div class="float-tag"><span>✦</span> Новые материалы</div>
+        <div class="float-tag"><span aria-hidden="true"></span>Новые материалы</div>
         <div class="visual" id="hero-visual">
-          <svg class="visual-art" viewBox="0 0 640 560" fill="none" aria-hidden="true">
-            <defs>
-              <linearGradient id="orb" x1="155" y1="78" x2="456" y2="460" gradientUnits="userSpaceOnUse"><stop stop-color="#C9B5FF"/><stop offset=".48" stop-color="#7D91E9"/><stop offset="1" stop-color="#68DCE8"/></linearGradient>
-              <radialGradient id="shine" cx="0" cy="0" r="1" gradientTransform="matrix(87 166 -191 100 265 190)" gradientUnits="userSpaceOnUse"><stop stop-color="white" stop-opacity=".67"/><stop offset="1" stop-color="white" stop-opacity="0"/></radialGradient>
-            </defs>
-            <circle cx="323" cy="272" r="165" fill="url(#orb)" fill-opacity=".78"/>
-            <circle cx="323" cy="272" r="165" fill="url(#shine)"/>
-            <ellipse cx="323" cy="272" rx="230" ry="92" stroke="#C7D3FF" stroke-opacity=".38" transform="rotate(-28 323 272)"/>
-            <ellipse cx="323" cy="272" rx="191" ry="236" stroke="#8FE7EF" stroke-opacity=".2" transform="rotate(31 323 272)"/>
-            <circle cx="478" cy="161" r="5" fill="#B8F7F4"/><circle cx="165" cy="380" r="3" fill="#D0C1FF"/>
-            <path d="M109 144h73M145 108v72M478 385h50m-25-25v50" stroke="white" stroke-opacity=".24" stroke-linecap="round"/>
-          </svg>
-          <img class="visual-img" src="assets/hero.jpg" alt="Абстрактная обложка медиаархива">
+          <img class="visual-img" src="assets/preview.jpg" alt="Превью медиаархива" fetchpriority="high">
           <div class="visual-caption">
             <div><span class="caption-title">Закрытый каталог</span><span class="caption-sub">Обновления каждый день</span></div>
             <span class="caption-chip">PHOTO · VIDEO</span>
